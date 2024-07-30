@@ -147,3 +147,9 @@ nav > ul {
 .Nav li:focus a {
   cursor: pointer;
 }
+
+@media (width < 400px) {
+  body{
+    font-size: 1rem;
+  }
+}
