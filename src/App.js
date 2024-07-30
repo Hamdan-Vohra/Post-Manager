@@ -1,23 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
-
+import {Routes,Route}from 'react-router-dom'
+import Post from './features/Posts/Post'
+import AddPostForm from './features/Posts/AddPostForm';
+import About from './features/Components/About';
+import Header from './features/Components/Header';
+import Footer from './features/Components/Footer';
+import Nav from './features/Components/Nav';
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header title={'Post Manager'}/>
+      <Nav/>
+      <Routes>
+        <Route path='/' element={<Post/>}/>
+        <Route path='/post' element={<AddPostForm/>}/>
+        <Route path='/about' element={<About/>}/>
+      </Routes>
+      <Footer/>
     </div>
   );
 }
