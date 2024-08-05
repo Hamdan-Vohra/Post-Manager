@@ -12,16 +12,16 @@ const initialState = {
 
 //creating async thunk function that fetches data from server
 export const fetchPosts = createAsyncThunk('posts/fetchPosts',async()=>{
-    try{
+        console.log('in async');
         const response = await axios.get(POSTS_URL);
         console.log(response);
         return response.data;
-    } catch(err){
-        console.log(err.message)
-        return err.message;
-    }
 })
 
+export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPost) => {
+    const response = await axios.post(POSTS_URL, initialPost)
+    return response.data
+})
 
 export const postSlice = createSlice({
     name: 'posts',
@@ -65,7 +65,6 @@ export const postSlice = createSlice({
         })
         .addCase(fetchPosts.fulfilled,(state,action)=>{
             state.status = 'succeeded'
-
             //Adding date and reactions
             let addMin = 1;
             const loadedPosts = action.payload.map(post=>{
@@ -86,6 +85,31 @@ export const postSlice = createSlice({
         .addCase(fetchPosts.rejected,(state,action)=>{
             state.status = 'failed';
             state.error = action.err.message;
+        })
+        .addCase(addNewPost.fulfilled, (state, action) => {
+            // Fix for API post IDs:
+            // Creating sortedPosts & assigning the id 
+            // would be not be needed if the fake API 
+            // returned accurate new post IDs
+            // const sortedPosts = state.posts.sort((a, b) => {
+            //     if (a.id > b.id) return 1
+            //     if (a.id < b.id) return -1
+            //     return 0
+            // })
+            // action.payload.id = sortedPosts[sortedPosts.length - 1].id + 1;
+            // End fix for fake API post IDs 
+
+            action.payload.userId = Number(action.payload.userId)
+            action.payload.date = new Date().toISOString();
+            action.payload.reactions = {
+                thumbsUp: 0,
+                wow: 0,
+                heart: 0,
+                rocket: 0,
+            }
+            // console.log(action.payload)
+            state.posts.push(action.payload);
+
         })
     }
 }

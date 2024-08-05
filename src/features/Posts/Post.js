@@ -8,24 +8,26 @@ const Post = () => {
     const dispatch = useDispatch();
 
     const posts = useSelector(getAllPosts);
-    // const postStatus = useSelector(getPostsStatus);
-    // const postError = useSelector(getPostsError);
+    const postStatus = useSelector(getPostsStatus);
+    const postError = useSelector(getPostsError);
 
-    // useEffect(()=>{
-    //   if(postStatus === 'idle'){
-    //     dispatch(fetchPosts);
-    //   }
-    // },[postStatus,dispatch])
+    useEffect(()=>{
+      if(postStatus === 'idle'){
+          dispatch(fetchPosts);
+      }
+    },[postStatus,dispatch])
 
     let content;
-    // if (postStatus === 'loading') {
-    //     content = <p>"Loading..."</p>;
-    // } else if (postStatus === 'succeeded') {
+    if (postStatus === 'loading') {
+        console.log('loading')
+        content = <p>{`${postStatus}...`}</p>;
+    } else if (postStatus === 'succeeded') {
+        console.log('Succeded')
         const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
         content = orderedPosts.map(post => <EachPost key={post.id} post={post} />)
-    // } else if (postStatus === 'failed') {
-    //     content = <p>{postError}</p>;
-    // }
+    } else if (postStatus === 'failed') {
+        content = <p>{postError}</p>;
+    }
 
   return (
     <section>
